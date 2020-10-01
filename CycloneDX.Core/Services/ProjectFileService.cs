@@ -21,7 +21,6 @@ using System.Xml;
 using System.IO;
 using System.IO.Abstractions;
 using System.Threading.Tasks;
-using Microsoft.Build.Evaluation;
 using CycloneDX.Core.Models;
 
 

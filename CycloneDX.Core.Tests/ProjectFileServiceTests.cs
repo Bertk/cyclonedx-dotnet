@@ -14,20 +14,19 @@
 //
 // Copyright (c) Steve Springett. All Rights Reserved.
 
-using System;
 using System.Collections.Generic;
+using System;
 using System.Threading.Tasks;
 using Xunit;
 using System.IO.Abstractions.TestingHelpers;
 using XFS = System.IO.Abstractions.TestingHelpers.MockUnixSupport;
 using Moq;
-using CycloneDX.Models;
 using CycloneDX.Core.Models;
 using CycloneDX.Services;
 
 namespace CycloneDX.Tests
 {
-    public class ProjectFileServiceTests
+  public class ProjectFileServiceTests
     {
         [Fact]
         public void GetPropertyUseProjectFileName()
@@ -52,7 +51,8 @@ namespace CycloneDX.Tests
 
     [Fact]
         public async Task GetProjectNugetPackages_WithProjectAssetsFile_ReturnsNugetPackage()
-        {
+          {
+
             var mockFileSystem = new MockFileSystem(new Dictionary<string, MockFileData>
                 {
                     { XFS.Path(@"c:\Project\Project.csproj"), "" },
@@ -85,7 +85,7 @@ namespace CycloneDX.Tests
                 });
         }
 
-        [Fact(Skip = "mocking for Microsoft.Build.Evaluation.Project required")]
+        [Fact]
         public async Task GetProjectNugetPackages_WithProjectAssetsFile_ReturnsMultipleNugetPackages()
         {
             var mockFileSystem = new MockFileSystem(new Dictionary<string, MockFileData>
@@ -123,7 +123,7 @@ namespace CycloneDX.Tests
                 item => Assert.Equal("Package3", item.Name));
         }
 
-        [Fact(Skip = "mocking for Microsoft.Build.Evaluation.Project required")]
+        [Fact]
         public async Task GetProjectNugetPackages_WithPackagesConfig_ReturnsNugetPackage()
         {
             var mockFileSystem = new MockFileSystem(new Dictionary<string, MockFileData>
@@ -163,9 +163,9 @@ namespace CycloneDX.Tests
                 });
         }
 
-        [Fact(Skip = "mocking for Microsoft.Build.Evaluation.Project required")]
+        [Fact]
         public async Task GetProjectNugetPackages_WithPackagesConfig_ReturnsMultipleNugetPackages()
-        {
+    {
             var mockFileSystem = new MockFileSystem(new Dictionary<string, MockFileData>
                 {
                     { XFS.Path(@"c:\Project\Project.csproj"), "" },
