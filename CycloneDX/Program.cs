@@ -34,9 +34,6 @@ namespace CycloneDX {
         [Option(Description = "The directory to write the BOM", ShortName = "o", LongName = "out")]
         string outputDirectory { get; }
 
-        [Option(Description = "Optionally provide a folder for customized build environment. Required if folder 'obj' is relocated.", ShortName = "biop", LongName = "base-intermediate-output-path")]
-        public string baseIntermediateOutputPath { get; } 
-
         [Option(Description = "Produce a JSON BOM instead of XML", ShortName = "j", LongName = "json")]
         bool json { get; }
 

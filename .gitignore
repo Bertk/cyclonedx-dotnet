@@ -7,4 +7,4 @@ coverage-report/
 coverage.cobertura.xml
 SBOM/
 launchSettings.json
-/test.bat
+test.bat

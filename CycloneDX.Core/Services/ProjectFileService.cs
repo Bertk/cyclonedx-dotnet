@@ -91,7 +91,7 @@ namespace CycloneDX.Services
       /// </summary>
       /// <param name="projectFilePath"></param>
       /// <returns></returns>
-      public async Task<HashSet<NugetPackage>> GetProjectNugetPackagesAsync(string projectFilePath, bool excludeDev)
+      public async Task<HashSet<NugetPackage>> GetProjectNugetPackagesAsync(string projectFilePath, string baseIntermediateOutputPath, bool excludeDev)
       {
             if (!_fileSystem.File.Exists(projectFilePath))
             {
