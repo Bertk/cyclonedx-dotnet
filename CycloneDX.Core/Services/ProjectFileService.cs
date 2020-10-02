@@ -58,13 +58,28 @@ namespace CycloneDX.Services
             _projectAssetsFileService = projectAssetsFileService;
         }
 
-        /// <summary>
-        /// Analyzes a single Project file for NuGet package references.
-        /// </summary>
-        /// <param name="projectFilePath"></param>
-        /// <returns></returns>
-        public async Task<HashSet<NugetPackage>> GetProjectNugetPackagesAsync(string projectFilePath)
+        public static bool IsTestProject(string projectFilePath)
         {
+        XmlDocument xmldoc = new XmlDocument();
+        xmldoc.Load(projectFilePath);
+
+        XmlElement elt = xmldoc.SelectSingleNode("/Project/PropertyGroup[IsTestProject='true']") as XmlElement;
+        if (elt != null)
+        {
+          return true;
+        }
+
+        return false;
+
+        }
+
+      /// <summary>
+      /// Analyzes a single Project file for NuGet package references.
+      /// </summary>
+      /// <param name="projectFilePath"></param>
+      /// <returns></returns>
+      public async Task<HashSet<NugetPackage>> GetProjectNugetPackagesAsync(string projectFilePath, bool excludeDev)
+      {
             if (!_fileSystem.File.Exists(projectFilePath))
             {
                 Console.Error.WriteLine($"Project file \"{projectFilePath}\" does not exist");
@@ -75,6 +90,12 @@ namespace CycloneDX.Services
 
             Console.WriteLine();
             Console.WriteLine($"» Analyzing: {projectFilePath}");
+
+            if (excludeDev && IsTestProject(projectFilePath))
+            {
+                Console.WriteLine($"Skipping: {projectFilePath}");
+                return new HashSet<NugetPackage>();
+            }
 
             Console.WriteLine("  Attempting to restore packages");
             var restoreResult = _dotnetUtilsService.Restore(projectFilePath);
@@ -114,13 +135,13 @@ namespace CycloneDX.Services
         /// </summary>
         /// <param name="projectFilePath"></param>
         /// <returns></returns>
-        public async Task<HashSet<NugetPackage>> RecursivelyGetProjectNugetPackagesAsync(string projectFilePath)
+        public async Task<HashSet<NugetPackage>> RecursivelyGetProjectNugetPackagesAsync(string projectFilePath, bool excludeDev)
         {
-            var nugetPackages = await GetProjectNugetPackagesAsync(projectFilePath).ConfigureAwait(false);
+            var nugetPackages = await GetProjectNugetPackagesAsync(projectFilePath, excludeDev).ConfigureAwait(false);
             var projectReferences = await RecursivelyGetProjectReferencesAsync(projectFilePath).ConfigureAwait(false);
             foreach (var project in projectReferences)
             {
-                var projectNugetPackages = await GetProjectNugetPackagesAsync(project).ConfigureAwait(false);
+                var projectNugetPackages = await GetProjectNugetPackagesAsync(project, excludeDev).ConfigureAwait(false);
                 nugetPackages.UnionWith(projectNugetPackages);
             }
             return nugetPackages;
